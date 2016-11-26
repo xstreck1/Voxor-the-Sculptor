@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Block : MonoBehaviour {
+public class Block : MonoBehaviour
+{
     public GameObject sourceCube = null;
 
     public float CubeSize { get { return sourceCube.transform.lossyScale.x; } }
@@ -18,7 +19,7 @@ public class Block : MonoBehaviour {
 
     public Vector3 IDToPosition(int ID)
     {
-        return new Vector3(ID % blockSide, (ID % (blockSide * blockSide))/ blockSide, ID / (blockSide * blockSide) );
+        return new Vector3(ID % blockSide, (ID % (blockSide * blockSide)) / blockSide, ID / (blockSide * blockSide));
     }
 
     public int PoisitionToID(Vector3 position)
@@ -27,7 +28,7 @@ public class Block : MonoBehaviour {
         {
             return -1;
         }
-        return (int) (Mathf.Round((position.x) + (position.y * blockSide) + (position.z * blockSide * blockSide)));
+        return (int)(Mathf.Round((position.x) + (position.y * blockSide) + (position.z * blockSide * blockSide)));
     }
 
     static public Vector3 RoundVector(Vector3 source)
@@ -42,7 +43,7 @@ public class Block : MonoBehaviour {
 
     public Vector3 LogicalToPhysical(Vector3 logicalPos)
     {
-        return logicalPos * CubeSize + (Vector3.up * height) - (Vector3.one * CubeSize * blockSide *.5f);
+        return logicalPos * CubeSize + (Vector3.up * height) - (Vector3.one * CubeSize * blockSide * .5f);
     }
 
     public Vector3 PhysicalToLogical(Vector3 physicalPos)
@@ -50,9 +51,15 @@ public class Block : MonoBehaviour {
         return (physicalPos - (Vector3.up * height) + (Vector3.one * CubeSize * blockSide * .5f)) / CubeSize;
     }
 
+    public bool IsBoundary(int ID)
+    {
+        Vector3 pos = IDToPosition(ID);
+        return pos.x == 0 || pos.y == 0 || pos.z == 0 || pos.x + 1 == blockSide || pos.y + 1 == blockSide || pos.z + 1 == blockSide;
+    }
+
     public GameObject IDToObject(int ID)
     {
-        if (ID >= 0 && ID < blockSide* blockSide* blockSide)
+        if (ID >= 0 && ID < blockSide * blockSide * blockSide)
         {
             return transform.GetChild(ID).gameObject;
         }
@@ -64,26 +71,12 @@ public class Block : MonoBehaviour {
 
     public void InstantiateBlockElements()
     {
-
-        for (int z = 0; z < blockSide; z++)
+        for (int ID = 0; ID < blockSide * blockSide * blockSide; ID++)
         {
-            GameObject z_group = new GameObject();
-            z_group.name = "Z" + z;
-            z_group.transform.parent = transform; 
-            for (int y = 0; y < blockSide; y++)
-            {
-                GameObject y_group = new GameObject();
-                y_group.name = "Y" + y;
-                y_group.transform.parent = z_group.transform;
-                for (int x = 0; x < blockSide; x++)
-                {
-                    int ID = x + y * blockSide + z * blockSide * blockSide;
-                    GameObject newCube = Instantiate(sourceCube, y_group.transform) as GameObject;
-                    newCube.name = "X" + x;
-                    newCube.SetActive(true);
-                    newCube.transform.position = LogicalToPhysical(IDToPosition(ID));
-                }
-            }
+            GameObject newCube = Instantiate(sourceCube, transform) as GameObject;
+            newCube.name = ID.ToString();
+            newCube.SetActive(true);
+            newCube.transform.position = LogicalToPhysical(IDToPosition(ID));
         }
     }
 }
