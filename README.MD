@@ -11,4 +11,4 @@ Right controller: cut
 touchpad up/down: increase/decrease size of tool
 touchpad left/right: change hue (let only)  
 
-![timelapse](http://justaconcept.org/Gallery/Voxor_the_Sculptor/timelapse.gif)
+![timelaps](http://justaconcept.org/Gallery/Voxor_the_Sculptor/timelapse_small.gif)
