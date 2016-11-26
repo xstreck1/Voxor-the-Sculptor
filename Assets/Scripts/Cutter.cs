@@ -8,6 +8,8 @@ public class Cutter : MonoBehaviour {
     Collider myCollider = null;
     Material material = null;
 
+    bool functional = false;
+
     void Awake()
     {
         myCollider = GetComponent<Collider>();
@@ -20,19 +22,34 @@ public class Cutter : MonoBehaviour {
         transform.localScale = Vector3.one * sourceSize;
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerStay(Collider other)
     {
-        other.gameObject.SetActive(false);
+        if (functional)
+        {
+            other.gameObject.SetActive(false);
+        }
+        else
+        {
+            other.gameObject.GetComponent<Renderer>().material.SetColor("_EmissionColor", Color.gray);
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        other.gameObject.GetComponent<Renderer>().material.SetColor("_EmissionColor", Color.black);
     }
 
     public void SetFunctional(bool isOn)
     {
-        myCollider.enabled = isOn;
-        material.color = new Color(material.color.r, material.color.g, material.color.b, isOn ? .75f : .15f);
+        functional = isOn;
+        material.color = new Color(material.color.r, material.color.g, material.color.b, functional ? .75f : .25f);
     }
 
     public void Scale(float howMuch)
     {
-        transform.localScale *= 1 + howMuch;
+        if ((transform.localScale.x <= .5f || howMuch < 0f) && (transform.localScale.x > .0001f || howMuch > 0f))
+        {
+            transform.localScale *= 1 + howMuch;
+        }
     } 
 }

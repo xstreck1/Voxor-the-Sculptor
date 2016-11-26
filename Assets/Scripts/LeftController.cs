@@ -5,6 +5,9 @@ using System;
 
 public class LeftController : MonoBehaviour
 {
+    static private bool menuPressed = false;
+    static public bool MenuPressed { private set { menuPressed = value; } get { return menuPressed; } }
+
     public Colorer colorer = null;
     public Block block = null;
 
@@ -14,8 +17,6 @@ public class LeftController : MonoBehaviour
     SteamVR_TrackedObject trackedObj;
     public SteamVR_Controller.Device Controller { get { return SteamVR_Controller.Input((int)trackedObj.index); } }
 
-    Valve.VR.EVRButtonId triggerButtonID = Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger;
-
     void Start()
     {
         trackedObj = GetComponent<SteamVR_TrackedObject>();
@@ -24,14 +25,24 @@ public class LeftController : MonoBehaviour
 
     void Update()
     {
-        if (Controller.GetPressDown(triggerButtonID))
+        if (Controller.GetPressDown(Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger))
         {
             colorer.SetFunctional(true);
         }
 
-        if (Controller.GetPressUp(triggerButtonID))
+        if (Controller.GetPressUp(Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger))
         {
             colorer.SetFunctional(false);
+        }
+
+        if (Controller.GetPressDown(Valve.VR.EVRButtonId.k_EButton_ApplicationMenu))
+        {
+            MenuPressed = true;
+        }
+
+        if (Controller.GetPressUp(Valve.VR.EVRButtonId.k_EButton_ApplicationMenu))
+        {
+            MenuPressed = false;
         }
 
         if (Controller.GetTouch(Valve.VR.EVRButtonId.k_EButton_SteamVR_Touchpad))

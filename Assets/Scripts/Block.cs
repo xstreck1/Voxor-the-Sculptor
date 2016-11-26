@@ -17,6 +17,14 @@ public class Block : MonoBehaviour
         InstantiateBlockElements();
     }
 
+    private void Update()
+    {
+        if (LeftController.MenuPressed && RightController.MenuPressed)
+        {
+            Reset();
+        }
+    }
+
     public Vector3 IDToPosition(int ID)
     {
         return new Vector3(ID % blockSide, (ID % (blockSide * blockSide)) / blockSide, ID / (blockSide * blockSide));
@@ -77,6 +85,16 @@ public class Block : MonoBehaviour
             newCube.name = ID.ToString();
             newCube.SetActive(true);
             newCube.transform.position = LogicalToPhysical(IDToPosition(ID));
+        }
+    }
+
+    public void Reset()
+    {
+        for (int ID = 0; ID < blockSide * blockSide * blockSide; ID++)
+        {
+            GameObject cube = IDToObject(ID);
+            cube.SetActive(true);
+            cube.GetComponent<Renderer>().material.color = Color.gray;
         }
     }
 }

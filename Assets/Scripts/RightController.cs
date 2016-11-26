@@ -13,7 +13,8 @@ public class RightController : MonoBehaviour
     SteamVR_TrackedObject trackedObj;
     public SteamVR_Controller.Device Controller { get { return SteamVR_Controller.Input((int)trackedObj.index); } }
 
-    Valve.VR.EVRButtonId triggerButtonID = Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger;
+    static private bool menuPressed = false;
+    static public bool MenuPressed { private set { menuPressed = value; } get { return menuPressed; } }
 
     void Start()
     {
@@ -23,24 +24,22 @@ public class RightController : MonoBehaviour
 
     void Update()
     {
-        /*Vector3 logical = block.ClosestLogical(cutter.transform.position);
-        int ID = block.PoisitionToID(logical);
-        if (true || ID != -1)
+        if (Controller.GetPressDown(Valve.VR.EVRButtonId.k_EButton_ApplicationMenu))
         {
-             Debug.Log("src: " + cutter.transform.position.x + "," + cutter.transform.position.y + "," + cutter.transform.position.z + "; log: " + logical.x  + "," + logical.y + "," + logical.z  + "; ID: " + ID);
+            MenuPressed = true;
         }
-        GameObject affectedBlock = block.IDToObject(ID);
-        if (affectedBlock != null)
-        {
-            affectedBlock.SetActive(false);
-        }*/
 
-        if (Controller.GetPressDown(triggerButtonID))
+        if (Controller.GetPressUp(Valve.VR.EVRButtonId.k_EButton_ApplicationMenu))
+        {
+            MenuPressed = false;
+        }
+
+        if (Controller.GetPressDown(Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger))
         {
             cutter.SetFunctional(true);
         }
 
-        if (Controller.GetPressUp(triggerButtonID))
+        if (Controller.GetPressUp(Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger))
         {
             cutter.SetFunctional(false);
         }

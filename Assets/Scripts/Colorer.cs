@@ -9,7 +9,9 @@ public class Colorer : MonoBehaviour
     Collider myCollider = null;
     Material material = null;
 
-    HSL myColor = new HSL(0.5f, 1f, .5f);
+    HSL myColor = new HSL(.5f, .5f, .5f);
+
+    bool functional = false;
 
     void Awake()
     {
@@ -24,15 +26,27 @@ public class Colorer : MonoBehaviour
         material.color = HSLColor.HSLToRGB(myColor);
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerStay(Collider other)
     {
-        other.gameObject.GetComponent<Renderer>().material.color = HSLColor.HSLToRGB(myColor);
+        if (functional)
+        {
+            other.gameObject.GetComponent<Renderer>().material.SetColor("_Color", HSLColor.HSLToRGB(myColor));
+        }
+        else
+        {
+            other.gameObject.GetComponent<Renderer>().material.SetColor("_EmissionColor", Color.gray);
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        other.gameObject.GetComponent<Renderer>().material.SetColor("_EmissionColor", Color.black);
     }
 
     public void SetFunctional(bool isOn)
     {
-        myCollider.enabled = isOn;
-        material.color = new Color(material.color.r, material.color.g, material.color.b, isOn ? .75f : .15f);
+        functional = isOn;
+        material.color = new Color(material.color.r, material.color.g, material.color.b, functional ? .75f : .25f);
     }
 
     public void ChangeColor(float howMuch)
@@ -45,6 +59,9 @@ public class Colorer : MonoBehaviour
 
     public void Scale(float howMuch)
     {
-        transform.localScale *= 1 + howMuch;
+        if ((transform.localScale.x <= .5f || howMuch < 0f) && (transform.localScale.x > .0001f || howMuch > 0f))
+        {
+            transform.localScale *= 1 + howMuch;
+        }
     }
 }
