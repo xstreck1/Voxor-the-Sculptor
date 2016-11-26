@@ -95,6 +95,7 @@ public class Block : MonoBehaviour
             GameObject cube = IDToObject(ID);
             cube.SetActive(true);
             cube.GetComponent<Renderer>().material.color = Color.gray;
+            cube.GetComponent<Renderer>().material.SetColor("_EmissionColor", Color.black);
         }
     }
 }
