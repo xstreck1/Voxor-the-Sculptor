@@ -3,6 +3,8 @@ Voxor the Sculptor
 
 A simple Voxel sculpting tool for HTC VIVE
 
+Contains Unity 4.3.0f3
+
 Use
 ---
 Left controller: color
